@@ -1,0 +1,1 @@
+enum level33 {easy ,normal ,hard }
