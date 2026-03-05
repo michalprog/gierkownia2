@@ -36,9 +36,12 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^3.2.1
   go_router: ^17.1.0
-  hive_ce: ^2.19.3
+  hive_ce:
+  hive_ce_flutter:
 
 dev_dependencies:
+  hive_ce_generator:
+  build_runner:
   flutter_test:
     sdk: flutter
 
