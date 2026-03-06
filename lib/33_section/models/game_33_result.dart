@@ -1,0 +1,6 @@
+class Game33Result {
+
+
+
+
+}

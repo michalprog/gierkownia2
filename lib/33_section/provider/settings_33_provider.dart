@@ -1,6 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:gierkownia2/33_section/models/setting_33_file.dart';
 import 'package:gierkownia2/consts/enums.dart';
 
@@ -9,25 +8,18 @@ final settings33StorageProvider = Provider<Settings33Storage>((ref) {
 });
 
 final settings33Provider =
-NotifierProvider<Settings33Controller, Setting33File>(
-  Settings33Controller.new,
-);
+StateNotifierProvider<Settings33Controller, Setting33File>((ref) {
+  final storage = ref.watch(settings33StorageProvider);
+  final controller = Settings33Controller(storage);
+  controller.loadSettings();
+  return controller;
+});
 
-class Settings33Controller extends Notifier<Setting33File> {
-  late final Settings33Storage _storage;
-  bool _isInitialized = false;
+class Settings33Controller extends StateNotifier<Setting33File> {
+  Settings33Controller(this._storage)
+      : super(Setting33File(level: level33.easy, winningNumber: 33));
 
-  @override
-  Setting33File build() {
-    _storage = ref.watch(settings33StorageProvider);
-
-    if (!_isInitialized) {
-      _isInitialized = true;
-      unawaited(loadSettings());
-    }
-
-    return Setting33File(level: level33.easy, winningNumber: 33);
-  }
+  final Settings33Storage _storage;
 
   Future<void> loadSettings() async {
     state = await _storage.loadSettings();
