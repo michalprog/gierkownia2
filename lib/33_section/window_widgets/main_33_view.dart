@@ -13,13 +13,19 @@ class Main33View extends StatelessWidget {
         ActionButton33(
           title: 'rozpocznij grę ',
           secondLineTitle: '(1 vs 1 lokalnie) ',
-          onPressed: () => context.goNamed('game-33'),
+          onPressed: () => context.goNamed(
+            'game-33',
+            queryParameters: const {'mode': 'local'},
+          ),
         ),
         const SizedBox(height: 12),
         ActionButton33(
           title: 'rozpocznij grę ',
           secondLineTitle: '(z botem) ',
-          onPressed: () => context.goNamed('game-33'),
+          onPressed: () => context.goNamed(
+            'game-33',
+            queryParameters: const {'mode': 'bot'},
+          ),
         ),
         const SizedBox(height: 12),
         ActionButton33(

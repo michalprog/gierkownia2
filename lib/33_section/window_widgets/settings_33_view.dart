@@ -64,6 +64,15 @@ class Settings33View extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 12),
+        Card(
+          child: SwitchListTile(
+            title: const Text('Kto zaczyna w grze z botem'),
+            subtitle: Text(settings.userStarts ? 'Zaczyna użytkownik' : 'Zaczyna bot'),
+            value: settings.userStarts,
+            onChanged: settingsController.updateUserStarts,
+          ),
+        ),
+        const SizedBox(height: 12),
         FilledButton.icon(
           onPressed: () => context.goNamed('main-33'),
           icon: const Icon(Icons.arrow_back),

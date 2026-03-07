@@ -16,8 +16,7 @@ StateNotifierProvider<Settings33Controller, Setting33File>((ref) {
 });
 
 class Settings33Controller extends StateNotifier<Setting33File> {
-  Settings33Controller(this._storage)
-      : super(Setting33File(level: level33.easy, winningNumber: 33));
+  Settings33Controller(this._storage) : super(Setting33File.initial());
 
   final Settings33Storage _storage;
 
@@ -32,6 +31,11 @@ class Settings33Controller extends StateNotifier<Setting33File> {
 
   Future<void> updateWinningNumber(int winningNumber) async {
     state = state.copyWith(winningNumber: winningNumber);
+    await _storage.saveSettings(state);
+  }
+
+  Future<void> updateUserStarts(bool userStarts) async {
+    state = state.copyWith(userStarts: userStarts);
     await _storage.saveSettings(state);
   }
 }

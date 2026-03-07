@@ -4,13 +4,27 @@ import 'package:hive_ce/hive.dart';
 class Setting33File {
   level33 level;
   int winningNumber;
+  bool userStarts;
+  bool isLoaded;
 
-  Setting33File({required this.winningNumber, required this.level});
+  Setting33File({
+    required this.winningNumber,
+    required this.level,
+    required this.userStarts,
+    this.isLoaded = true,
+  });
 
-  Setting33File copyWith({level33? level, int? winningNumber}) {
+  Setting33File copyWith({
+    level33? level,
+    int? winningNumber,
+    bool? userStarts,
+    bool? isLoaded,
+  }) {
     return Setting33File(
       level: level ?? this.level,
       winningNumber: winningNumber ?? this.winningNumber,
+      userStarts: userStarts ?? this.userStarts,
+      isLoaded: isLoaded ?? this.isLoaded,
     );
   }
 
@@ -18,6 +32,7 @@ class Setting33File {
     return {
       'level': level.index,
       'winningNumber': winningNumber,
+      'userStarts': userStarts,
     };
   }
 
@@ -25,6 +40,17 @@ class Setting33File {
     return Setting33File(
       level: level33.values[map['level'] as int? ?? level33.easy.index],
       winningNumber: map['winningNumber'] as int? ?? 33,
+      userStarts: map['userStarts'] as bool? ?? true,
+      isLoaded: true,
+    );
+  }
+
+  factory Setting33File.initial() {
+    return Setting33File(
+      level: level33.easy,
+      winningNumber: 33,
+      userStarts: true,
+      isLoaded: false,
     );
   }
 }

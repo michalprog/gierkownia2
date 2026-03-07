@@ -3,120 +3,51 @@ import 'dart:math';
 import 'package:gierkownia2/consts/enums.dart';
 
 class Bot33 {
-  Bot33({
-    level33 level = level33.easy,
-    int actualNumber = 0,
-    int finalNumber = 33,
-    Random? random,
-  })  : type = level,
-        actualNumber = actualNumber,
-        finalNumber = max(33, finalNumber),
-        _random = random ?? Random();
+  Bot33({required this.type});
 
-  final Random _random;
+  final level33 type;
+  final Random _random = Random();
 
-  level33 type;
-  int actualNumber;
-  int finalNumber;
+  int chooseMove({required int actualNumber, required int finalNumber}) {
+    final legalMoves = _legalMoves(actualNumber: actualNumber, finalNumber: finalNumber);
+    if (legalMoves.isEmpty) {
+      return 0;
+    }
 
-  void configure({
-    required level33 level,
-    required int finalNumber,
-    int actualNumber = 0,
-  }) {
-    type = level;
-    this.finalNumber = max(33, finalNumber);
-    this.actualNumber = actualNumber;
-  }
-
-
-  int move(actualNumber) {
-    this.actualNumber=actualNumber;
     switch (type) {
       case level33.easy:
-        easyBot();
-        break;
+        return legalMoves[_random.nextInt(legalMoves.length)];
       case level33.normal:
-        normalBot();
-        break;
+        return _normalMove(legalMoves, actualNumber, finalNumber);
       case level33.hard:
-        hardBot();
-        break;
-    }
-    return actualNumber;
-  }
-
-
-  void easyBot() {
-    final dodawana = _random.nextInt(3) + 1;
-    _applyMove(dodawana);
-  }
-
-
-  void normalBot() {
-    final shouldPlayHard = _random.nextInt(100) < 70;
-    if (shouldPlayHard) {
-      hardBot();
-    } else {
-      easyBot();
+        return _hardMove(legalMoves, actualNumber, finalNumber);
     }
   }
 
-  void hardBot() {
-    final endgame = _endgameMove();
-    if (endgame != null) {
-      _applyMove(endgame);
-      return;
-    }
-
-    final targetMod = (finalNumber - 1) % 4;
-    final currentMod = actualNumber % 4;
-
-    if (targetMod == currentMod) {
-      easyBot();
-      return;
-    }
-
-    int dodanaWartosc;
-    if (targetMod < currentMod) {
-      dodanaWartosc = 4 - (currentMod - targetMod);
-    } else {
-      dodanaWartosc = targetMod - currentMod;
-    }
-
-    _applyMove(dodanaWartosc);
+  List<int> _legalMoves({required int actualNumber, required int finalNumber}) {
+    return [1, 2, 3]
+        .where((step) => actualNumber + step <= finalNumber)
+        .toList();
   }
 
-
-
-
-  int _maxAllowedMove() {
-    final remaining = finalNumber - actualNumber;
-    return remaining.clamp(0, 3);
+  int _normalMove(List<int> legalMoves, int actualNumber, int finalNumber) {
+    final safeMoves = legalMoves
+        .where((move) => actualNumber + move != finalNumber - 1)
+        .toList();
+    if (safeMoves.isNotEmpty) {
+      return safeMoves[_random.nextInt(safeMoves.length)];
+    }
+    return legalMoves[_random.nextInt(legalMoves.length)];
   }
 
-  void _applyMove(int value) {
-    final maxMove = _maxAllowedMove();
-    if (maxMove == 0) {
-      return;
+  int _hardMove(List<int> legalMoves, int actualNumber, int finalNumber) {
+    final targetRemainder = (finalNumber - 1) % 4;
+    for (final move in legalMoves) {
+      final next = actualNumber + move;
+      if (next % 4 == targetRemainder) {
+        return move;
+      }
     }
-    final safeValue = value.clamp(1, maxMove);
-    actualNumber += safeValue;
-  }
-
-
-  int? _endgameMove() {
-    final remaining = finalNumber - actualNumber;
-    if (remaining <= 0 || remaining > 4) {
-      return null;
-    }
-
-    if (remaining == 1) {
-      // Ruch wymuszony – bot niestety przegrywa.
-      return 1;
-    }
-
-    // Zostaw przeciwnikowi finalNumber - 1.
-    return remaining - 1;
+    return _normalMove(legalMoves, actualNumber, finalNumber);
   }
 }

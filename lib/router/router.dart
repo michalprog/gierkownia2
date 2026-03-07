@@ -29,7 +29,9 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'game',
                 name: 'game-33',
-                builder: (context, state) => const Game33View(),
+                builder: (context, state) => Game33View(
+                  isBotGame: state.uri.queryParameters['mode'] == 'bot',
+                ),
               ),
               GoRoute(
                 path: 'settings',
