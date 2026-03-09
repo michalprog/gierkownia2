@@ -5,6 +5,9 @@ import 'package:gierkownia2/33_section/window_widgets/game_33_view.dart';
 import 'package:gierkownia2/33_section/window_widgets/main_33_view.dart';
 import 'package:gierkownia2/33_section/window_widgets/settings_33_view.dart';
 import 'package:gierkownia2/main_section/window_widgets/main_view.dart';
+import 'package:gierkownia2/tictactoe_section/window_widgets/ttt_game_view.dart';
+import 'package:gierkownia2/tictactoe_section/window_widgets/ttt_main_view.dart';
+import 'package:gierkownia2/tictactoe_section/window_widgets/ttt_page_view.dart';
 import 'package:go_router/go_router.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -37,6 +40,27 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: 'settings',
                 name: 'settings-33',
                 builder: (context, state) => const Settings33View(),
+              ),
+            ],
+          ),
+        ],
+      ),
+      ShellRoute(
+        builder: (BuildContext context, GoRouterState state, Widget child) {
+          return TttPageView(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: '/ttt',
+            name: 'ttt-main',
+            builder: (context, state) => const TttMainView(),
+            routes: [
+              GoRoute(
+                path: 'game',
+                name: 'ttt-game',
+                builder: (context, state) => TttGameView(
+                  isBotGame: state.uri.queryParameters['mode'] == 'bot',
+                ),
               ),
             ],
           ),

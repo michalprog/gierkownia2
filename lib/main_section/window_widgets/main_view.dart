@@ -22,7 +22,7 @@ class MainView extends StatelessWidget {
     body: ListView(
         children: [
           ChooseGameButton(title: "gra 33", onPressed: () => context.goNamed('main-33'),),
-          ChooseGameButton(title: "kółko i krzyżyk", onPressed: (){}),
+          ChooseGameButton(title: "kółko i krzyżyk", onPressed: () => context.goNamed('ttt-main'),),
       ],
 
     ),
