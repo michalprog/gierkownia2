@@ -3,10 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gierkownia2/33_section/window_widgets/game_33_page.dart';
 import 'package:gierkownia2/33_section/window_widgets/game_33_view.dart';
 import 'package:gierkownia2/33_section/window_widgets/main_33_view.dart';
+import 'package:gierkownia2/33_section/window_widgets/result_33_view.dart';
 import 'package:gierkownia2/33_section/window_widgets/settings_33_view.dart';
+import 'package:gierkownia2/33_section/models/game_33_result.dart';
 import 'package:gierkownia2/main_section/window_widgets/main_view.dart';
+import 'package:gierkownia2/models/game_ttt_result.dart';
 import 'package:gierkownia2/tictactoe_section/window_widgets/ttt_game_view.dart';
 import 'package:gierkownia2/tictactoe_section/window_widgets/ttt_main_view.dart';
+import 'package:gierkownia2/tictactoe_section/window_widgets/ttt_result_view.dart';
 import 'package:gierkownia2/tictactoe_section/window_widgets/ttt_page_view.dart';
 import 'package:go_router/go_router.dart';
 
@@ -41,6 +45,17 @@ final routerProvider = Provider<GoRouter>((ref) {
                 name: 'settings-33',
                 builder: (context, state) => const Settings33View(),
               ),
+              GoRoute(
+                path: 'result',
+                name: 'result-33',
+                builder: (context, state) {
+                  final result = state.extra;
+                  if (result is! Game33Result) {
+                    return const Main33View();
+                  }
+                  return Result33View(currentResult: result);
+                },
+              ),
             ],
           ),
         ],
@@ -61,6 +76,17 @@ final routerProvider = Provider<GoRouter>((ref) {
                 builder: (context, state) => TttGameView(
                   isBotGame: state.uri.queryParameters['mode'] == 'bot',
                 ),
+              ),
+              GoRoute(
+                path: 'result',
+                name: 'ttt-result',
+                builder: (context, state) {
+                  final result = state.extra;
+                  if (result is! GameTttResult) {
+                    return const TttMainView();
+                  }
+                  return TttResultView(currentResult: result);
+                },
               ),
             ],
           ),

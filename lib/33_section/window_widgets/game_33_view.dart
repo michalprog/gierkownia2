@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gierkownia2/33_section/models/game_33.dart';
 import 'package:gierkownia2/33_section/models/game_33_result.dart';
 import 'package:gierkownia2/33_section/provider/settings_33_provider.dart';
+import 'package:go_router/go_router.dart';
 
 class Game33View extends ConsumerStatefulWidget {
   const Game33View({super.key, required this.isBotGame});
@@ -15,25 +16,9 @@ class Game33View extends ConsumerStatefulWidget {
 
 class _Game33ViewState extends ConsumerState<Game33View> {
   final Game33ResultStorage _resultStorage = Game33ResultStorage();
-  List<Game33Result> _latestResults = [];
 
   Game33? _game;
   bool _savedCurrentGame = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadResults();
-  }
-
-  Future<void> _loadResults() async {
-    final results = await _resultStorage.loadLatest(limit: 8);
-    if (mounted) {
-      setState(() {
-        _latestResults = results;
-      });
-    }
-  }
 
   void _ensureGame({required bool userStarts}) {
     if (_game != null) {
@@ -60,35 +45,21 @@ class _Game33ViewState extends ConsumerState<Game33View> {
     }
 
     _savedCurrentGame = true;
-    await _resultStorage.addResult(
-      Game33Result(
-        isBotGame: widget.isBotGame,
-        level: game.level,
-        winningNumber: game.winningNumber,
-        finalNumber: game.currentNumber,
-        winner: game.winner ?? 'Nieznany',
-        finishedAt: DateTime.now(),
-      ),
+    final result = Game33Result(
+      isBotGame: widget.isBotGame,
+      level: game.level,
+      winningNumber: game.winningNumber,
+      finalNumber: game.currentNumber,
+      winner: game.winner ?? 'Nieznany',
+      finishedAt: DateTime.now(),
     );
-    await _loadResults();
+    await _resultStorage.addResult(result);
 
     if (!mounted) {
       return;
     }
 
-    await showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Koniec gry'),
-        content: Text(game.statusText),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
+    context.goNamed('result-33', extra: result);
   }
 
   void _resetGame() {
@@ -134,9 +105,7 @@ class _Game33ViewState extends ConsumerState<Game33View> {
                       ),
                     if (widget.isBotGame)
                       Text(
-                        settings.userStarts
-                            ? 'Startuje użytkownik'
-                            : 'Startuje bot',
+                        settings.userStarts ? 'Startuje użytkownik' : 'Startuje bot',
                         textAlign: TextAlign.center,
                       ),
                     Text(
@@ -163,10 +132,7 @@ class _Game33ViewState extends ConsumerState<Game33View> {
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     child: ElevatedButton(
                       onPressed: game.canAdd(value)
-                          ? () => _handleMove(
-                        value,
-                        userStarts: settings.userStarts,
-                      )
+                          ? () => _handleMove(value, userStarts: settings.userStarts)
                           : null,
                       child: Text('+$value'),
                     ),
@@ -181,28 +147,6 @@ class _Game33ViewState extends ConsumerState<Game33View> {
               icon: const Icon(Icons.refresh),
               label: const Text('Nowa gra'),
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Ostatnie wyniki (zapis lokalny)',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            if (_latestResults.isEmpty)
-              const Text('Brak zapisanych wyników')
-            else
-              ..._latestResults.map(
-                    (result) => ListTile(
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    '${result.isBotGame ? 'Bot' : '2 graczy'} • wygrał: ${result.winner}',
-                  ),
-                  subtitle: Text(
-                    'max: ${result.winningNumber}, koniec: ${result.finalNumber}, '
-                        '${result.finishedAt.toLocal()}',
-                  ),
-                ),
-              ),
           ],
         ),
       ),
