@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gierkownia2/models/game_ttt_result.dart';
+import 'package:gierkownia2/tictactoe_section/models/game_ttt_result.dart';
 import 'package:go_router/go_router.dart';
 
 class TttResultView extends StatefulWidget {

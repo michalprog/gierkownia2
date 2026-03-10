@@ -1,4 +1,4 @@
-import 'package:gierkownia2/models/bot_ttt.dart';
+import 'package:gierkownia2/tictactoe_section/models/bot_ttt.dart';
 
 class GameTtt {
   GameTtt({required this.isBotGame});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gierkownia2/models/game_ttt_result.dart';
+import 'package:gierkownia2/tictactoe_section/models/game_ttt_result.dart';
 import 'package:gierkownia2/tictactoe_section/provider/ttt_game_provider.dart';
 import 'package:gierkownia2/tictactoe_section/widgets/ttt_widget.dart';
 import 'package:go_router/go_router.dart';

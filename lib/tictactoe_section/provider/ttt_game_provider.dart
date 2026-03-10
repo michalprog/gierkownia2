@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gierkownia2/models/game_ttt.dart';
+import 'package:gierkownia2/tictactoe_section/models/game_ttt.dart';
 
 class TttGameState {
   const TttGameState({required this.game, required this.savedCurrentGame});
